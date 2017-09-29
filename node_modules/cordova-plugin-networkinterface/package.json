@@ -1,0 +1,111 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "cordova-plugin-networkinterface",
+        "scope": null,
+        "escapedName": "cordova-plugin-networkinterface",
+        "name": "cordova-plugin-networkinterface",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/Users/tinychou/Public/git_repo/UDPSenderTest/node_modules"
+    ]
+  ],
+  "_cnpm_publish_time": 1499862937989,
+  "_from": "cordova-plugin-networkinterface@latest",
+  "_hasShrinkwrap": false,
+  "_id": "cordova-plugin-networkinterface@1.2.0",
+  "_inCache": true,
+  "_location": "/cordova-plugin-networkinterface",
+  "_nodeVersion": "8.0.0",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/cordova-plugin-networkinterface-1.2.0.tgz_1499862937044_0.7521482475567609"
+  },
+  "_npmUser": {
+    "name": "salbahra",
+    "email": "salbahra@gmail.com"
+  },
+  "_npmVersion": "5.0.3",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "cordova-plugin-networkinterface",
+    "scope": null,
+    "escapedName": "cordova-plugin-networkinterface",
+    "name": "cordova-plugin-networkinterface",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npm.taobao.org/cordova-plugin-networkinterface/download/cordova-plugin-networkinterface-1.2.0.tgz",
+  "_shasum": "47fd0214a579658d3cd2541778693aecde0f651e",
+  "_shrinkwrap": null,
+  "_spec": "cordova-plugin-networkinterface",
+  "_where": "/Users/tinychou/Public/git_repo/UDPSenderTest/node_modules",
+  "author": {
+    "name": "Samer Albahra"
+  },
+  "bugs": {
+    "url": "https://github.com/salbahra/cordova-plugin-networkinterface/issues"
+  },
+  "cordova": {
+    "id": "cordova-plugin-networkinterface",
+    "platforms": [
+      "ios",
+      "android",
+      "wp8",
+      "blackberry10"
+    ]
+  },
+  "dependencies": {},
+  "description": "This plugin allows your application to retrieve the local wifi address.",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "47fd0214a579658d3cd2541778693aecde0f651e",
+    "size": 6356,
+    "noattachment": false,
+    "tarball": "http://registry.npm.taobao.org/cordova-plugin-networkinterface/download/cordova-plugin-networkinterface-1.2.0.tgz"
+  },
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.1.0"
+    }
+  ],
+  "gitHead": "c5b2fb4f1868f3df000b753f123c6502a0129c59",
+  "homepage": "https://github.com/salbahra/cordova-plugin-networkinterface#readme",
+  "keywords": [
+    "local",
+    "ip",
+    "wifi",
+    "network",
+    "ecosystem:cordova",
+    "cordova-ios",
+    "cordova-android",
+    "cordova-wp8",
+    "cordova-blackberry10"
+  ],
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "salbahra",
+      "email": "salbahra@gmail.com"
+    }
+  ],
+  "name": "cordova-plugin-networkinterface",
+  "optionalDependencies": {},
+  "publish_time": 1499862937989,
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salbahra/cordova-plugin-networkinterface.git"
+  },
+  "version": "1.2.0"
+}

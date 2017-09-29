@@ -1,0 +1,111 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "cordova-plugin-chrome-apps-iossocketscommon@1",
+        "scope": null,
+        "escapedName": "cordova-plugin-chrome-apps-iossocketscommon",
+        "name": "cordova-plugin-chrome-apps-iossocketscommon",
+        "rawSpec": "1",
+        "spec": ">=1.0.0 <2.0.0",
+        "type": "range"
+      },
+      "/Users/tinychou/Public/git_repo/UDPSenderTest/node_modules"
+    ]
+  ],
+  "_cnpm_publish_time": 1430360792030,
+  "_from": "cordova-plugin-chrome-apps-iossocketscommon@>=1.0.0 <2.0.0",
+  "_hasShrinkwrap": false,
+  "_id": "cordova-plugin-chrome-apps-iossocketscommon@1.0.2",
+  "_inCache": true,
+  "_location": "/cordova-plugin-chrome-apps-iossocketscommon",
+  "_nodeVersion": "0.10.29",
+  "_npmUser": {
+    "name": "agrieve",
+    "email": "agrieve@chromium.org"
+  },
+  "_npmVersion": "2.1.18",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "cordova-plugin-chrome-apps-iossocketscommon@1",
+    "scope": null,
+    "escapedName": "cordova-plugin-chrome-apps-iossocketscommon",
+    "name": "cordova-plugin-chrome-apps-iossocketscommon",
+    "rawSpec": "1",
+    "spec": ">=1.0.0 <2.0.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npm.taobao.org/cordova-plugin-chrome-apps-iossocketscommon/download/cordova-plugin-chrome-apps-iossocketscommon-1.0.2.tgz",
+  "_shasum": "7d6b7390804bdb2f383101f471a7c2731918c11e",
+  "_shrinkwrap": null,
+  "_spec": "cordova-plugin-chrome-apps-iossocketscommon@1",
+  "_where": "/Users/tinychou/Public/git_repo/UDPSenderTest/node_modules",
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/MobileChromeApps/cordova-plugin-chrome-apps-iosSocketsCommon/issues"
+  },
+  "cordova": {
+    "id": "cordova-plugin-chrome-apps-iossocketscommon",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "dependencies": {},
+  "description": "This plugin provides common services for chrome.socket and chrome.sockets APIs on iOS.",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "7d6b7390804bdb2f383101f471a7c2731918c11e",
+    "size": 87743,
+    "noattachment": false,
+    "tarball": "http://registry.npm.taobao.org/cordova-plugin-chrome-apps-iossocketscommon/download/cordova-plugin-chrome-apps-iossocketscommon-1.0.2.tgz"
+  },
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "gitHead": "05355fced972522131f1ffc27379b4025d447c4f",
+  "homepage": "https://github.com/MobileChromeApps/cordova-plugin-chrome-apps-iosSocketsCommon",
+  "keywords": [
+    "chrome",
+    "ios",
+    "sockets",
+    "ecosystem:cordova",
+    "cordova-ios"
+  ],
+  "license": "BSD",
+  "maintainers": [
+    {
+      "name": "agrieve",
+      "email": "agrieve@chromium.org"
+    },
+    {
+      "name": "clelland",
+      "email": "iclelland@google.com"
+    },
+    {
+      "name": "maxw",
+      "email": "maxw@chromium.org"
+    },
+    {
+      "name": "mmocny",
+      "email": "mmocny@gmail.com"
+    }
+  ],
+  "name": "cordova-plugin-chrome-apps-iossocketscommon",
+  "optionalDependencies": {},
+  "publish_time": 1430360792030,
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MobileChromeApps/cordova-plugin-chrome-apps-iosSocketsCommon.git"
+  },
+  "scripts": {},
+  "version": "1.0.2"
+}
