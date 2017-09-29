@@ -14,13 +14,20 @@ function Transfer (device, data) {
   this.bytesLength = this.data.byteLength;
   this.chunkCount = parseInt(this.bytesLength / Transfer.CHUNK_SIZE) +
     ((this.bytesLength % Transfer.CHUNK_SIZE) === 0 ? 0 : 1);
-  this.sent = false;
   this.isStopped = false;
   console.log('bytesLength: ' + this.bytesLength + ' chunkCount: ' + this.chunkCount + ' chunkSize: ' + Transfer.CHUNK_SIZE);
 
   // receive
   this.recvListener = null;
   this.receiveErrorListener = null;
+  this.receivedChunks = [];
+  this.receiveBytesLength = null;
+  this.receiveChunkCount = null;
+  this.receivedBytesLength = 0;
+  this.receivedChunkCount = 0;
+
+  // listener
+  this.transferListener = null;
 };
 
 Transfer.prototype.startSend = function () {
@@ -37,6 +44,14 @@ Transfer.prototype.startRecv = function () {
     that.bindRecvListener();
     // no sending
   });
+};
+
+Transfer.prototype.stop = function () {
+  if (this.sending) {
+    this.stopSend();
+  }
+  this.unbindRecvListener();
+  this.unbindSocket();
 };
 
 Transfer.CHUNK_SIZE = 2 * 1024; // 2k data packet
@@ -87,31 +102,28 @@ Transfer.prototype.send = function () {
   if (this.isStopped) {
     this.sending = false;
     this.sentChunk = 0;
-    this.sent = false;
     return;
   }
 
   if (this.sending) { // seding hava been started
     if (this.sentChunk === this.chunkCount) { // should be ended
-      if (!this.sent) {
-        var frameEnd = {
-          op: 'END',
-          chunkCount: this.chunkCount,
-          bytesLength: this.bytesLength
-        };
-        console.log('SEND: ' + JSON.stringify(frameEnd));
-        data = stringToBytes(JSON.stringify(frameEnd));
-        chrome.sockets.udp.send(this.socketCreateInfo.socketId, data, this.device.address, Transfer.PORT, function (result) {
-          if (result < 0) {
-            throw new Error('send failed: ' + JSON.stringify(result));
-          } else {
-            // ended!!!
-            that.sent = true;
-          }
-        });
-      } else {
-        // ended and do nothing
-      }
+      var frameEnd = {
+        op: 'END',
+        chunkCount: this.chunkCount,
+        bytesLength: this.bytesLength
+      };
+      console.log('SEND: ' + JSON.stringify(frameEnd));
+      data = stringToBytes(JSON.stringify(frameEnd));
+      chrome.sockets.udp.send(this.socketCreateInfo.socketId, data, this.device.address, Transfer.PORT, function (result) {
+        if (result < 0) {
+          console.error('send failed: ' + JSON.stringify(result));
+          if (that.transferListener) that.transferListener.onSendFailed();
+        } else {
+          // ended!!!
+          if (that.transferListener) that.transferListener.onSendProgressUpdate(100);
+          if (that.transferListener) that.transferListener.onSendSuccess();
+        }
+      });
     } else {
       // sending a single chunk bytes
       var bytesLength = 0;
@@ -131,8 +143,12 @@ Transfer.prototype.send = function () {
       data = stringToBytes(JSON.stringify(frameData));
       chrome.sockets.udp.send(this.socketCreateInfo.socketId, data, this.device.address, Transfer.PORT, function (result) {
         if (result < 0) {
-          throw new Error('send failed: ' + JSON.stringify(result));
+          console.error('send failed: ' + JSON.stringify(result));
+          if (that.transferListener) that.transferListener.onSendFailed();
         } else {
+          var progress = that.sentChunk / that.chunkCount * 100;
+          progress = parseInt(progress);
+          if (that.transferListener) that.transferListener.onSendProgressUpdate(progress);
           that.send();// continue
         }
       });
@@ -147,12 +163,15 @@ Transfer.prototype.send = function () {
     data = stringToBytes(JSON.stringify(frameStart));
     chrome.sockets.udp.send(this.socketCreateInfo.socketId, data, this.device.address, Transfer.PORT, function (result) {
       if (result < 0) {
-        throw new Error('send failed: ' + JSON.stringify(result));
+        console.error('send failed: ' + JSON.stringify(result));
+        if (that.transferListener) that.transferListener.onSendFailed();
       } else {
         // success
         that.sending = true;
         that.sentChunk = 0;
         that.send(); // continue
+
+        if (that.transferListener) that.transferListener.onSendProgressUpdate(0);
       }
     });
   }
@@ -168,7 +187,46 @@ Transfer.prototype.bindRecvListener = function () {
   this.recvListener = function (info) {
     if (that.socketCreateInfo.socketId !== info.socketId) return;
 
-    console.log('Receive: ' + bytesToString(info.data));
+    var jsonStr = bytesToString(info.data);
+    console.log('Receive: ' + jsonStr);
+
+    var json = JSON.parse(jsonStr);
+    if (!json.op) return;
+    if (json.op === 'START') {
+      // start
+      that.receivedChunks = []; // clear it if needed
+      that.receiveChunkCount = json.chunkCount;
+      that.receiveBytesLength = json.bytesLength;
+
+      if (that.transferListener) that.transferListener.onReceiveProgressUpdate(0);
+    } else if (json.op === 'END') {
+      if (that.receivedChunkCount === that.receiveChunkCount &&
+          that.receivedBytesLength === that.receiveBytesLength) {
+        // complete
+        if (that.transferListener) that.transferListener.onReceiveProgressUpdate(100);
+        if (that.transferListener) that.transferListener.onReceiveSuccess();
+      } else {
+        console.error('END error that chunk count or bytes length error! ' + jsonStr);
+        if (that.transferListener) that.transferListener.onReceiveFailed();
+      }
+    } else if (json.op === 'DATA') {
+      if (that.receivedChunks < that.receiveChunkCount && that.receivedBytesLength < that.receiveChunkCount) {
+        // each frame
+        that.receivedChunks[json.chunkIndex - 1] = JSON.parse(json.data);
+        that.receivedBytesLength += json.bytesLength;
+        that.receivedChunkCount += 1;
+
+        var progress = that.receivedBytesLength / that.receiveBytesLength * 100;
+        progress = parseInt(progress);
+        if (that.transferListener) that.transferListener.onReceiveProgressUpdate(progress);
+      } else {
+        console.error('Chunk count or bytes length error! ' + jsonStr);
+        if (that.transferListener) that.transferListener.onReceiveFailed();
+      }
+    } else {
+      console.error('Unknown op: ' + json.op);
+      if (that.transferListener) that.transferListener.onReceiveFailed();
+    }
   };
   this.recvErrorListener = function (info) {
     if (that.socketCreateInfo.socketId !== info.socketId) return;
@@ -189,4 +247,21 @@ Transfer.prototype.unbindRecvListener = function () {
     chrome.sockets.udp.onReceiveError.removeListener(this.recvErrorListener);
     this.recvErrorListener = null;
   }
+};
+
+// eg: {
+//      onSendProgressUpdate: function (progress) {},
+//      onSendSuccess: function () {},
+//      onSendFailed: function () {},
+
+//      onReceiveProgressUpdate: function (progress) {},
+//      onReceiveSuccess: function () {},
+//      onReceiveFailed: function () {}
+//     }
+Transfer.prototype.registerTransferListener = function (listener) {
+  this.transferListener = listener;
+};
+
+Transfer.prototype.unregisterTransferListener = function () {
+  this.transferListener = null;
 };

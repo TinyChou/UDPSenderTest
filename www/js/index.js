@@ -79,6 +79,25 @@ var app = {
                     uuid: 'abccada-saadad'
                   }
                 ]);
+
+                t.registerTransferListener({
+                  onSendFailed: function () {},
+                  onSendSuccess: function () {
+                    console.log('onSendSuccess');
+                  },
+                  onSendProgressUpdate: function (p) {
+                    console.log('onSendProgressUpdate: ' + p + '%');
+                  },
+
+                  onReceiveFailed: function () {},
+                  onReceiveSuccess: function () {
+                    console.log('onReceiveSuccess');
+                  },
+                  onReceiveProgressUpdate: function (p) {
+                    console.log('onReceiveProgressUpdate: ' + p + '%');
+                  }
+                });
+
                 if (ip === '192.168.0.67') t.startSend();
                 else t.startRecv();
               },
