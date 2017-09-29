@@ -47,6 +47,8 @@ var app = {
             console.log('ip get: ' + ip + ' ' + subnet);
             var b = new Broadcast(device, 9, ip);
             b.registerOnlineListChangedListener({
+              d: null, // device
+              t: null, // Transfer instance
               online: function (d) {
                 console.log('Find new device: ' + JSON.stringify(d));
 
@@ -109,9 +111,21 @@ var app = {
 
                 if (ip === '192.168.0.67') t.startSend();
                 else t.startRecv();
+
+                this.d = d;
+                this.t = t;
               },
               offline: function (d) {
                 console.log('Device offiline: ' + JSON.stringify(d));
+
+                if (d.address === this.d.address) {
+                  // clear the
+                  if (this.t) {
+                    this.t.stop();
+                    this.t = null;
+                  }
+                  this.d = null;
+                }
               }
             });
             b.start();

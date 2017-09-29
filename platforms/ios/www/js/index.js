@@ -47,6 +47,8 @@ var app = {
             console.log('ip get: ' + ip + ' ' + subnet);
             var b = new Broadcast(device, 9, ip);
             b.registerOnlineListChangedListener({
+              d: null, // device
+              t: null, // Transfer instance
               online: function (d) {
                 console.log('Find new device: ' + JSON.stringify(d));
 
@@ -79,8 +81,8 @@ var app = {
                     uuid: 'abccada-saadad'
                   },
                   {
-                    name: '未命名 3', // do not support
-                    description: '描述信息', // do not support
+                    name: '未命名 3', // do not support without <meta charset="utf-8">
+                    description: '描述信息', // do not support without <meta charset="utf-8">
                     photos: [],
                     data: '<xml><\/xml>',
                     create_time: 3456,
@@ -109,9 +111,21 @@ var app = {
 
                 if (ip === '192.168.0.67') t.startSend();
                 else t.startRecv();
+
+                this.d = d;
+                this.t = t;
               },
               offline: function (d) {
                 console.log('Device offiline: ' + JSON.stringify(d));
+
+                if (d.address === this.d.address) {
+                  // clear the
+                  if (this.t) {
+                    this.t.stop();
+                    this.t = null;
+                  }
+                  this.d = null;
+                }
               }
             });
             b.start();

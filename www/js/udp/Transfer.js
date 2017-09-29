@@ -211,6 +211,9 @@ Transfer.prototype.bindRecvListener = function () {
         }
         data = JSON.parse(data);
         if (that.transferListener) that.transferListener.onReceiveSuccess(data);
+
+        that.receivedBytesLength = 0;
+        that.receivedChunkCount = 0;
       } else {
         console.error('END error that chunk count or bytes length error! ' + jsonStr);
         if (that.transferListener) that.transferListener.onReceiveFailed();
