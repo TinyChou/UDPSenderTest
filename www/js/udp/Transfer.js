@@ -120,6 +120,7 @@ Transfer.prototype.send = function () {
           if (that.transferListener) that.transferListener.onSendFailed();
         } else {
           // ended!!!
+          that.sending = false;
           if (that.transferListener) that.transferListener.onSendProgressUpdate(100);
           if (that.transferListener) that.transferListener.onSendSuccess();
         }
