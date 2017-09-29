@@ -205,7 +205,12 @@ Transfer.prototype.bindRecvListener = function () {
           that.receivedBytesLength === that.receiveBytesLength) {
         // complete
         if (that.transferListener) that.transferListener.onReceiveProgressUpdate(100);
-        if (that.transferListener) that.transferListener.onReceiveSuccess();
+        var data = '';
+        for (var i = 0; i < that.receivedChunks.length; i++) {
+          data += that.receivedChunks[i];
+        }
+        data = JSON.parse(data);
+        if (that.transferListener) that.transferListener.onReceiveSuccess(data);
       } else {
         console.error('END error that chunk count or bytes length error! ' + jsonStr);
         if (that.transferListener) that.transferListener.onReceiveFailed();
@@ -213,7 +218,7 @@ Transfer.prototype.bindRecvListener = function () {
     } else if (json.op === 'DATA') {
       if (that.receivedChunks < that.receiveChunkCount && that.receivedBytesLength < that.receiveChunkCount) {
         // each frame
-        that.receivedChunks[json.chunkIndex - 1] = JSON.parse(json.data);
+        that.receivedChunks[json.chunkIndex - 1] = json.data;
         that.receivedBytesLength += json.bytesLength;
         that.receivedChunkCount += 1;
 
@@ -256,7 +261,7 @@ Transfer.prototype.unbindRecvListener = function () {
 //      onSendFailed: function () {},
 
 //      onReceiveProgressUpdate: function (progress) {},
-//      onReceiveSuccess: function () {},
+//      onReceiveSuccess: function ([project array]) {},
 //      onReceiveFailed: function () {}
 //     }
 Transfer.prototype.registerTransferListener = function (listener) {

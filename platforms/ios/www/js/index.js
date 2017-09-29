@@ -77,6 +77,15 @@ var app = {
                     create_time: 3456,
                     update_time: 3456,
                     uuid: 'abccada-saadad'
+                  },
+                  {
+                    name: '未命名 3', // do not support
+                    description: '描述信息', // do not support
+                    photos: [],
+                    data: '<xml><\/xml>',
+                    create_time: 3456,
+                    update_time: 3456,
+                    uuid: 'abccada-saadad'
                   }
                 ]);
 
@@ -90,8 +99,8 @@ var app = {
                   },
 
                   onReceiveFailed: function () {},
-                  onReceiveSuccess: function () {
-                    console.log('onReceiveSuccess');
+                  onReceiveSuccess: function (arr) {
+                    console.log('onReceiveSuccess: ' + JSON.stringify(arr));
                   },
                   onReceiveProgressUpdate: function (p) {
                     console.log('onReceiveProgressUpdate: ' + p + '%');
