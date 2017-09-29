@@ -45,7 +45,7 @@ var app = {
         networkinterface.getWiFiIPAddress(
           function (ip, subnet) {
             console.log('ip get: ' + ip + ' ' + subnet);
-            var b = new Broadcast(device.device, 9, ip);
+            var b = new Broadcast(device, 9, ip);
             b.registerOnlineListChangedListener({
               online: function (d) {
                 console.log('Find new device: ' + JSON.stringify(d));

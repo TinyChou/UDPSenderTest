@@ -39,6 +39,14 @@ Transfer.prototype.startRecv = function () {
   });
 };
 
+Transfer.prototype.stop = function () {
+  if (this.sending) {
+    this.stopSend();
+  }
+  this.unbindRecvListener();
+  this.unbindSocket();
+};
+
 Transfer.CHUNK_SIZE = 2 * 1024; // 2k data packet
 Transfer.PORT = 20018;
 Transfer.FRAME_START = {
