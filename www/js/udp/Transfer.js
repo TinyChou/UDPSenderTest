@@ -54,7 +54,7 @@ Transfer.prototype.stop = function () {
   this.unbindSocket();
 };
 
-Transfer.CHUNK_SIZE = 2 * 1024; // 2k data packet
+Transfer.CHUNK_SIZE = 32; // 32byte data packet :) keep it so small for a more beautiful progress >.<
 Transfer.PORT = 20018;
 Transfer.FRAME_START = {
   op: 'START',
@@ -138,9 +138,9 @@ Transfer.prototype.send = function () {
         op: 'DATA',
         chunkIndex: this.sentChunk,
         bytesLength: bytesLength,
-        data: bytesToString(this.data.slice((this.sentChunk - 1) * Transfer.CHUNK_SIZE, this.bytesLength)),
+        data: bytesToString(this.data.slice((this.sentChunk - 1) * Transfer.CHUNK_SIZE, (this.sentChunk - 1) * Transfer.CHUNK_SIZE + bytesLength)),
       };
-      console.log('SEND: ' + JSON.stringify(frameData));
+      console.log('SEND: ' + JSON.stringify(frameData) + ' chunk: ' + frameData.data.length);
       data = stringToBytes(JSON.stringify(frameData));
       chrome.sockets.udp.send(this.socketCreateInfo.socketId, data, this.device.address, Transfer.PORT, function (result) {
         if (result < 0) {
@@ -219,7 +219,8 @@ Transfer.prototype.bindRecvListener = function () {
         if (that.transferListener) that.transferListener.onReceiveFailed();
       }
     } else if (json.op === 'DATA') {
-      if (that.receivedChunks < that.receiveChunkCount && that.receivedBytesLength < that.receiveChunkCount) {
+      if (that.receivedChunkCount <= that.receiveChunkCount &&
+         that.receivedBytesLength <= that.receiveBytesLength) {
         // each frame
         that.receivedChunks[json.chunkIndex - 1] = json.data;
         that.receivedBytesLength += json.bytesLength;
@@ -274,3 +275,5 @@ Transfer.prototype.registerTransferListener = function (listener) {
 Transfer.prototype.unregisterTransferListener = function () {
   this.transferListener = null;
 };
+
+export default Transfer

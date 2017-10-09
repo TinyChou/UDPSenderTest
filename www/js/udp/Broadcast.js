@@ -41,10 +41,64 @@ function Broadcast (device, projectCount, ip) {
   this.recvErrorListener = null;
 
   this.onOnlineListChangedListener = null; // @see registerOnlineListChangedListener / unregisterOnlineListChangedListener
+
+  this.mockTask = null;
 };
 
 Broadcast.prototype.start = function () {
   var that = this;
+  if (!window.cordova || window.cordova.platformId === 'browser') {
+    this.mockTask = setTimeout(function () {
+      that.onOnlineListChangedListener.online({
+        "socketId":0,
+        "address":"192.168.0.164",
+        "remotePort":20017,
+        "profile":{
+          "device":{
+            "available":true,
+            "platform":"iOS",
+            "version":"10.3.2",
+            "uuid":"04523498-67B1-4248-A1BF-B33452E312D7",
+            "cordova":"4.4.0",
+            "model":"iPad5,1",
+            "manufacturer":"Apple",
+            "isVirtual":false,
+            "serial":"unknown"
+          },
+          "projectCount":10,
+          "ip":"192.168.0.164"
+        },
+        "firstFindTimestamp":1507530646638,
+        "lastFindTimestamp":1507530646638
+      });
+    }, 3000);
+    setTimeout(function () {
+      that.onOnlineListChangedListener.offline({
+        "socketId":0,
+        "address":"192.168.0.164",
+        "remotePort":20017,
+        "profile":{
+          "device":{
+            "available":true,
+            "platform":"iOS",
+            "version":"10.3.2",
+            "uuid":"04523498-67B1-4248-A1BF-B33452E312D7",
+            "cordova":"4.4.0",
+            "model":"iPad5,1",
+            "manufacturer":"Apple",
+            "isVirtual":false,
+            "serial":"unknown"
+          },
+          "projectCount":10,
+          "ip":"192.168.0.164"
+        },
+        "firstFindTimestamp":1507530646638,
+        "lastFindTimestamp":1507530646638
+      });
+    }, 5000);
+    return;
+  }
+
   this.bindBroadcast(function () {
     that.bindRecvListener();
     that.startBroadcast();
@@ -52,6 +106,10 @@ Broadcast.prototype.start = function () {
 };
 
 Broadcast.prototype.stop = function () {
+  if (this.mockTask) {
+    clearTimeout(this.mockTask);
+    this.mockTask = null;
+  }
   this.unbindRecvListener();
   this.stopBroadcast();
   this.unbindBroadcast();
@@ -215,3 +273,5 @@ Broadcast.prototype.registerOnlineListChangedListener = function (listener) {
 Broadcast.prototype.unregisterOnlineListChangedListener = function () {
   this.onOnlineListChangedListener = null;
 };
+
+export default Broadcast
